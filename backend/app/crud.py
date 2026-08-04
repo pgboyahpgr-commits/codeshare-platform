@@ -6,16 +6,18 @@ from .models import SnippetCreate
 load_dotenv()
 
 url: str = os.environ.get("SUPABASE_URL", "")
-key: str = os.environ.get("SUPABASE_KEY", "")
+# Use the service role secret to perform backend db updates
+secret: str = os.environ.get("SUPABASE_SECRET", "") or os.environ.get("SUPABASE_KEY", "")
 
-supabase: Client = create_client(url, key)
+supabase: Client = create_client(url, secret)
 
-def create_snippet(snippet: SnippetCreate):
+def create_snippet(snippet: SnippetCreate, user_id: str):
     data = {
         "title": snippet.title,
         "content": snippet.content,
         "language": snippet.language,
-        "is_public": snippet.is_public
+        "is_public": snippet.is_public,
+        "user_id": user_id
     }
     response = supabase.table("snippets").insert(data).execute()
     return response.data[0] if response.data else None

@@ -1,14 +1,15 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 import uuid
 from ..models import SnippetCreate, SnippetRead
 from .. import crud
+from ..auth import get_current_user_id
 
 router = APIRouter()
 
 @router.post("/", response_model=SnippetRead)
-def create_snippet(snippet: SnippetCreate):
-    result = crud.create_snippet(snippet)
+def create_snippet(snippet: SnippetCreate, user_id: str = Depends(get_current_user_id)):
+    result = crud.create_snippet(snippet, user_id)
     if not result:
         raise HTTPException(status_code=400, detail="Error creating snippet")
     return result
