@@ -17,7 +17,7 @@ class Snippet(SnippetBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: Optional[uuid.UUID] = Field(default=None)
     created_at: datetime = Field(default_factory=get_utc_now)
-    expires_at: datetime = Field(default=None) # To be set dynamically
+    expires_at: datetime = Field(default=None)
     view_count: int = Field(default=0)
 
 class SnippetCreate(SnippetBase):
@@ -29,3 +29,16 @@ class SnippetRead(SnippetBase):
     expires_at: datetime
     view_count: int
     user_id: Optional[uuid.UUID]
+
+class UserBase(SQLModel):
+    username: str
+
+class UserCreate(UserBase):
+    password: str
+
+class UserLogin(UserBase):
+    password: str
+
+class UserRead(UserBase):
+    id: uuid.UUID
+    created_at: datetime

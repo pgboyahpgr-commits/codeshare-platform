@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import snippets
+from .routes import snippets, users
 
 app = FastAPI(title="CodeShare Platform API")
 
@@ -13,7 +13,9 @@ app.add_middleware(
 )
 
 app.include_router(snippets.router, prefix="/api/snippets", tags=["snippets"])
+app.include_router(users.router, prefix="/api/auth", tags=["auth"])
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to CodeShare Platform API"}
+

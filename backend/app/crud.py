@@ -6,11 +6,11 @@ from .models import SnippetCreate
 load_dotenv()
 
 url: str = os.environ.get("SUPABASE_URL", "")
-# Use the service role secret to perform backend db updates
 secret: str = os.environ.get("SUPABASE_SECRET", "") or os.environ.get("SUPABASE_KEY", "")
 
 supabase: Client = create_client(url, secret)
 
+# --- Snippets Operations ---
 def create_snippet(snippet: SnippetCreate, user_id: str):
     data = {
         "title": snippet.title,
@@ -29,3 +29,16 @@ def get_snippet(snippet_id: str):
 def list_snippets():
     response = supabase.table("snippets").select("*").eq("is_public", True).execute()
     return response.data
+
+# --- Custom Users Operations ---
+def create_user(username: str, password_hash: str):
+    data = {
+        "username": username,
+        "password_hash": password_hash
+    }
+    response = supabase.table("users").insert(data).execute()
+    return response.data[0] if response.data else None
+
+def get_user_by_username(username: str):
+    response = supabase.table("users").select("*").eq("username", username).execute()
+    return response.data[0] if response.data else None
