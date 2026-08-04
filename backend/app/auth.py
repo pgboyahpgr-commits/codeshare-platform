@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SECRET_KEY = os.environ.get("SUPABASE_SECRET", "super-secret-key-1234567890-change-me")
+SECRET_KEY = os.environ.get("SUPABASE_JWT_SECRET", "super-secret-key-1234567890-change-me")
 ALGORITHM = "HS256"
 
 def hash_password(password: str) -> str:

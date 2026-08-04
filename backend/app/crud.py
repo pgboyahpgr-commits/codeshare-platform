@@ -6,7 +6,7 @@ from .models import SnippetCreate
 load_dotenv()
 
 url: str = os.environ.get("SUPABASE_URL", "")
-secret: str = os.environ.get("SUPABASE_SECRET", "") or os.environ.get("SUPABASE_KEY", "")
+secret: str = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_SERVICE_ROLE", "")
 
 supabase: Client = create_client(url, secret)
 
