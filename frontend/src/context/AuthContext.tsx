@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect } from "react"
+import React, { createContext, useContext, useState } from "react"
 
 interface User {
   id: string
@@ -18,21 +18,25 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+function loadUser(): User | null {
+  if (typeof window === "undefined") return null
+  const raw = window.localStorage.getItem("codeshare_user")
+  if (!raw) return null
+  try {
+    return JSON.parse(raw) as User
+  } catch {
+    return null
+  }
+}
 
-  useEffect(() => {
-    // Load session from localStorage on mount
-    const storedUser = localStorage.getItem("codeshare_user")
-    const storedToken = localStorage.getItem("codeshare_token")
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser))
-      setToken(storedToken)
-    }
-    setLoading(false)
-  }, [])
+function loadToken(): string | null {
+  if (typeof window === "undefined") return null
+  return window.localStorage.getItem("codeshare_token")
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(() => loadUser())
+  const [token, setToken] = useState<string | null>(() => loadToken())
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
@@ -86,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, signOut }}>
+    <AuthContext.Provider value={{ user, token, loading: false, login, register, signOut }}>
       {children}
     </AuthContext.Provider>
   )

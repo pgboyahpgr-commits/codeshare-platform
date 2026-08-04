@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
 import AuthModal from "./AuthModal"
 import Link from "next/link"
@@ -8,6 +9,7 @@ import Link from "next/link"
 export default function Navbar() {
   const { user, signOut } = useAuth()
   const [isAuthOpen, setIsAuthOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <>
@@ -20,11 +22,22 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <Link 
-              href="/" 
-              className="text-sm text-gray-300 hover:text-white transition-colors font-medium"
+            <Link
+              href="/"
+              className={`text-sm transition-colors font-medium ${
+                pathname === "/" ? "text-white" : "text-gray-300 hover:text-white"
+              }`}
             >
               New Snippet
+            </Link>
+
+            <Link
+              href="/community"
+              className={`text-sm transition-colors font-medium ${
+                pathname.startsWith("/community") ? "text-white" : "text-gray-300 hover:text-white"
+              }`}
+            >
+              Community
             </Link>
 
             {user ? (

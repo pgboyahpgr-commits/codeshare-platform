@@ -34,8 +34,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         await login(username, password)
         onClose()
       }
-    } catch (err: any) {
-      setMessage(err.message || "An error occurred")
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "An error occurred")
     } finally {
       setLoading(false)
     }
