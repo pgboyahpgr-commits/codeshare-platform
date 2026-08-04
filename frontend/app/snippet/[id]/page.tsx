@@ -21,7 +21,8 @@ export default function SnippetPage() {
   useEffect(() => {
     if (!id) return
 
-    fetch(`http://localhost:8000/api/snippets/${id}`)
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+    fetch(`${apiUrl}/api/snippets/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Snippet not found')

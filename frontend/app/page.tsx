@@ -12,7 +12,8 @@ export default function Home() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/snippets/', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const response = await fetch(`${apiUrl}/api/snippets/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
